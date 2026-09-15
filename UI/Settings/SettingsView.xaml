@@ -1,0 +1,29 @@
+<UserControl x:Class="AntarTechControl.UI.Settings.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <StackPanel>
+        <TextBlock Text="SYSTEM CONFIGURATION" FontSize="14" FontWeight="Bold" Foreground="#00E5FF" Margin="0,0,0,5"/>
+        <TextBlock Text="SETTINGS" FontSize="36" FontWeight="Black" Margin="0,0,0,30" Foreground="#FFFFFF"/>
+        
+        <Border Background="#130C20" CornerRadius="12" Padding="25" Margin="0,0,15,20" BorderBrush="#1F1433" BorderThickness="1">
+            <StackPanel>
+                <TextBlock Text="GENERAL" FontSize="18" FontWeight="Bold" Foreground="#FF33CC" Margin="0,0,0,15" />
+                
+                <TextBlock Text="Tema" FontSize="12" Foreground="#8888AA" Margin="0,0,0,5"/>
+                <ComboBox SelectedIndex="0" Width="200" HorizontalAlignment="Left" Background="#0A0512" Foreground="White" BorderBrush="#2A1B44" Margin="0,0,0,15">
+                    <ComboBoxItem Content="Dark Neon (Default)"/>
+                </ComboBox>
+
+                <TextBlock Text="Iniciar con Windows" FontSize="12" Foreground="#8888AA" Margin="0,0,0,5"/>
+                <CheckBox Content="Arrancar minimizado en la bandeja del sistema" Foreground="#AAAAAA" FontSize="12" Margin="0,0,0,15"/>
+
+                <TextBlock Text="Buscar Actualizaciones" FontSize="12" Foreground="#8888AA" Margin="0,0,0,5"/>
+                <Button Content="BUSCAR AHORA" Width="150" HorizontalAlignment="Left" Background="#1A112C" Foreground="#00E5FF" BorderBrush="#2A1B44" Padding="10,5"/>
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

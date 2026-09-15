@@ -1,0 +1,55 @@
+<UserControl x:Class="AntarTechControl.UI.Dashboard.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <StackPanel>
+        <TextBlock Text="HARDWARE MANAGEMENT SUITE" FontSize="14" FontWeight="Bold" Foreground="#00E5FF" Margin="0,0,0,5"/>
+        <TextBlock Text="MY DEVICES" FontSize="36" FontWeight="Black" Margin="0,0,0,30" Foreground="#FFFFFF"/>
+        
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Height="500">
+            <ItemsControl ItemsSource="{Binding GroupedDevices}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="0,0,0,30">
+                            <!-- Category Header -->
+                            <TextBlock Text="{Binding Key}" FontSize="18" FontWeight="Bold" Foreground="#FF33CC" Margin="0,0,0,10" />
+                            
+                            <!-- Devices in this category -->
+                            <ItemsControl ItemsSource="{Binding}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <!-- Note: Normally this would be a button, but since we have the sidebar for selection, 
+                                             we can just show them as nice cards. If they want it clickable, we can bind it. -->
+                                        <Button Margin="0,0,15,15" Padding="0" BorderThickness="0" Background="Transparent" 
+                                                Command="{Binding DataContext.NavigateToDashboardCommand, RelativeSource={RelativeSource AncestorType=Window}}" >
+                                            <Border Width="250" Height="120" Background="#130C20" CornerRadius="12" Padding="20" BorderBrush="#1F1433" BorderThickness="1">
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" Foreground="#FFFFFF" TextWrapping="Wrap" MaxHeight="45"/>
+                                                    <TextBlock Text="{Binding Type}" FontSize="12" Foreground="#8888AA" Margin="0,5,0,0"/>
+                                                    <TextBlock FontSize="10" Foreground="#666688" Margin="0,15,0,0">
+                                                        <Run Text="VID: "/>
+                                                        <Run Text="{Binding Vid}" Foreground="#00E5FF"/>
+                                                        <Run Text=" PID: "/>
+                                                        <Run Text="{Binding Pid}" Foreground="#00E5FF"/>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </Border>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </StackPanel>
+</UserControl>

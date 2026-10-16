@@ -7,12 +7,23 @@
         xmlns:vm="clr-namespace:AntarTechControl.ViewModels"
         xmlns:cal="clr-namespace:AntarTechControl.UI.Calibration"
         xmlns:dash="clr-namespace:AntarTechControl.UI.Dashboard"
+        xmlns:tut="clr-namespace:AntarTechControl.UI.Tutorial"
         xmlns:set="clr-namespace:AntarTechControl.UI.Settings"
+        xmlns:ctrl="clr-namespace:AntarTechControl.UI.Controls"
         mc:Ignorable="d"
-        Title="ANTARTECH CONTROL" Height="800" Width="1050"
-        Background="#0A0512" Foreground="White"
-        FontFamily="Segoe UI" WindowStartupLocation="CenterScreen"
-        Icon="logo.png">
+        Title="ANTARTECH CONTROL" Height="860" Width="1220"
+        MinHeight="680" MinWidth="960"
+        Background="#08090C" Foreground="White"
+        FontFamily="{StaticResource AntarFontFamily}" WindowStartupLocation="CenterScreen"
+        WindowStyle="None" ResizeMode="CanResize"
+        Icon="pack://application:,,,/logo_clean_cyan.png">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="66"
+                      ResizeBorderThickness="6"
+                      GlassFrameThickness="0"
+                      CornerRadius="0"/>
+    </WindowChrome.WindowChrome>
     
     <Window.DataContext>
         <vm:MainViewModel />
@@ -26,70 +37,238 @@
         <DataTemplate x:Key="DashboardTemplate">
             <dash:DashboardView />
         </DataTemplate>
+        <DataTemplate x:Key="TutorialTemplate">
+            <tut:TutorialView />
+        </DataTemplate>
         <DataTemplate x:Key="SettingsTemplate">
             <set:SettingsView />
         </DataTemplate>
+
+        <!-- Window Control Button Style -->
+        <Style x:Key="WindowCtrlBtn" TargetType="Button">
+            <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#8E93A3"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Width" Value="48"/>
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#1C1E2A"/>
+                                <Setter Property="Foreground" Value="#FFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CloseCtrlBtn" TargetType="Button" BasedOn="{StaticResource WindowCtrlBtn}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#DC2626"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Logitech G HUB Style Nav Item: Clean Text with Cyan Active Underline Indicator -->
+        <Style x:Key="GHubNavTab" TargetType="Button">
+            <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#8E93A3"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="4,8"/>
+            <Setter Property="Margin" Value="0,0,28,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Background="Transparent">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,6"/>
+                                <Border x:Name="Underline" Height="2.5" Width="24" Background="Transparent" CornerRadius="1" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="#FFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Dynamic Active States matching G HUB -->
+        <Style x:Key="DevicesTabStyle" TargetType="Button" BasedOn="{StaticResource GHubNavTab}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding CurrentView}" Value="{x:Static vm:AppView.Dashboard}">
+                    <Setter Property="Foreground" Value="#00C3FF"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Grid Background="Transparent">
+                                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,6"/>
+                                        <Border Height="2.5" Width="26" Background="#00C3FF" CornerRadius="1" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding CurrentView}" Value="{x:Static vm:AppView.Calibration}">
+                    <Setter Property="Foreground" Value="#00C3FF"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Grid Background="Transparent">
+                                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,6"/>
+                                        <Border Height="2.5" Width="26" Background="#00C3FF" CornerRadius="1" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="TutorialTabStyle" TargetType="Button" BasedOn="{StaticResource GHubNavTab}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding CurrentView}" Value="{x:Static vm:AppView.Tutorial}">
+                    <Setter Property="Foreground" Value="#00C3FF"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Grid Background="Transparent">
+                                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,6"/>
+                                        <Border Height="2.5" Width="26" Background="#00C3FF" CornerRadius="1" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="SettingsTabStyle" TargetType="Button" BasedOn="{StaticResource GHubNavTab}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding CurrentView}" Value="{x:Static vm:AppView.Settings}">
+                    <Setter Property="Foreground" Value="#00C3FF"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Grid Background="Transparent">
+                                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,6"/>
+                                        <Border Height="2.5" Width="26" Background="#00C3FF" CornerRadius="1" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="280"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="66"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <!-- Sidebar -->
-        <Border Background="#0F091A" Padding="25" BorderBrush="#1A112C" BorderThickness="0,0,1,0">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+        <!-- ============================================================ -->
+        <!-- TOP CHROME BAR (Exact Logitech G HUB Layout)                  -->
+        <!-- ============================================================ -->
+        <Border Grid.Row="0" Background="#08090C" BorderBrush="#14161F" BorderThickness="0,0,0,1">
+            <Grid Margin="20,0,10,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-                <StackPanel>
-                    <Image Source="pack://application:,,,/logo.png" Height="100" HorizontalAlignment="Center" Margin="0,0,0,10"/>
-                    <TextBlock Text="HARDWARE CONFIGURATION SUITE" FontSize="9" Foreground="#666688" Margin="0,0,0,5" HorizontalAlignment="Center"/>
-                    <Button Content="WWW.ANTARTECH.COM.AR" Command="{Binding OpenWebsiteCommand}" 
-                            Background="Transparent" BorderThickness="0" Foreground="#FF33CC" FontSize="10" FontWeight="Bold" Cursor="Hand" Margin="0,0,0,30" HorizontalAlignment="Center"/>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- Brand Icon (Crisp, prominent minimalist logo: 52px) -->
+                    <Border Width="52" Height="52" Margin="0,0,24,0" VerticalAlignment="Center">
+                        <Image Source="pack://application:,,,/logo_clean_cyan.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
+                    </Border>
+
+                    <!-- Nav Links with G-HUB Blue Underline Indicator -->
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Content="{Binding L.NavDevices}" Command="{Binding NavigateToDashboardCommand}" Style="{StaticResource DevicesTabStyle}"/>
+                        <Button Content="{Binding L.NavTutorial}" Command="{Binding NavigateToTutorialCommand}" Style="{StaticResource TutorialTabStyle}"/>
+                        <Button Content="{Binding L.NavSettings}" Command="{Binding NavigateToSettingsCommand}" Style="{StaticResource SettingsTabStyle}"/>
+                    </StackPanel>
                 </StackPanel>
-                
-                <TextBlock Text="DISPOSITIVOS" FontSize="11" FontWeight="SemiBold" Foreground="#8888AA" Grid.Row="1" Margin="0,0,0,15"/>
-                
-                <ListBox Grid.Row="2" Margin="0,0,0,0" 
-                         ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}"
-                         Background="Transparent" BorderThickness="0" Foreground="White">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Border Padding="15" Background="#160E25" CornerRadius="8" Margin="0,0,0,10" BorderBrush="#2A1B44" BorderThickness="1">
-                                <StackPanel>
-                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14" Foreground="#FFFFFF"/>
-                                    <TextBlock Text="{Binding Type}" FontSize="11" Foreground="#8888AA" Margin="0,2,0,0"/>
-                                    <TextBlock FontSize="10" Foreground="#666688" Margin="0,8,0,0">
-                                        <Run Text="VID: "/>
-                                        <Run Text="{Binding VendorId, StringFormat=X4}" Foreground="#00E5FF"/>
-                                        <Run Text=" PID: "/>
-                                        <Run Text="{Binding ProductId, StringFormat=X4}" Foreground="#00E5FF"/>
-                                    </TextBlock>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
 
-                <StackPanel Grid.Row="3" Margin="0,15,0,0">
-                    <Button Content="🏠 DASHBOARD" Command="{Binding NavigateToDashboardCommand}"
-                            Background="#160E25" Foreground="#00E5FF" FontWeight="Bold" Padding="15" Margin="0,0,0,10"/>
-                    <Button Content="ACTUALIZAR LISTA" Command="{Binding RefreshDevicesCommand}"
-                            Background="#160E25" Foreground="#8888AA" FontWeight="SemiBold" Padding="15"/>
-                    <Button Content="⚙ CONFIGURACIÓN DE APP" Command="{Binding NavigateToSettingsCommand}"
-                            Background="Transparent" BorderThickness="0" Foreground="#8888AA" FontSize="11" Padding="15" Margin="0,10,0,0"/>
+                <!-- Right: Website Link + Window Controls -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Command="{Binding OpenWebsiteCommand}" 
+                            WindowChrome.IsHitTestVisibleInChrome="True"
+                            Background="Transparent" BorderThickness="0"
+                            Foreground="#6E7385" FontSize="12" FontWeight="SemiBold" 
+                            Cursor="Hand" Padding="8,6" Margin="0,0,16,0" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="antartech.com.ar" Foreground="#8E93A3"/>
+                            <TextBlock Text=" ↗" Foreground="#00C3FF" FontWeight="Bold"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!-- Windows Controls -->
+                    <Button Content="─" Click="Minimize_Click" Style="{StaticResource WindowCtrlBtn}" ToolTip="Minimizar"/>
+                    <Button Content="▢" Click="Maximize_Click" Style="{StaticResource WindowCtrlBtn}" ToolTip="Maximizar"/>
+                    <Button Content="✕" Click="Close_Click" Style="{StaticResource CloseCtrlBtn}" ToolTip="Cerrar"/>
                 </StackPanel>
             </Grid>
         </Border>
-        
-        <!-- Main Content Host -->
-        <Border Grid.Column="1" Padding="40">
+
+        <!-- ============================================================ -->
+        <!-- BACKGROUND: FLOATING PARTICLES + SLEEK EDGE WATERMARK          -->
+        <!-- ============================================================ -->
+        <Grid Grid.Row="1" Panel.ZIndex="0" IsHitTestVisible="False">
+            <Grid.Background>
+                <SolidColorBrush Color="#08090C"/>
+            </Grid.Background>
+
+            <!-- Subtle Floating Ambient Particles -->
+            <ctrl:ParticleCanvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
+            <!-- Subtle Edge / Bottom Watermark: ANTARTECH -->
+            <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,40,24" Orientation="Horizontal" IsHitTestVisible="False">
+                <TextBlock Text="ANTARTECH" 
+                           FontSize="72" FontWeight="Black" 
+                           Foreground="#FFFFFF" Opacity="0.04" 
+                           VerticalAlignment="Bottom"/>
+            </StackPanel>
+
+            <TextBlock Text="DEVELOPED BY ANTARES" 
+                       FontSize="11" FontWeight="Bold" 
+                       Foreground="#8E93A3" Opacity="0.18" 
+                       HorizontalAlignment="Left" VerticalAlignment="Bottom" 
+                       Margin="40,0,0,32" IsHitTestVisible="False"/>
+        </Grid>
+
+        <!-- ============================================================ -->
+        <!-- MAIN CONTENT HOST (Active View)                             -->
+        <!-- ============================================================ -->
+        <Border Grid.Row="1" Padding="25" Panel.ZIndex="1">
             <ContentControl Content="{Binding}">
                 <ContentControl.Style>
                     <Style TargetType="ContentControl">
@@ -100,6 +279,9 @@
                             <DataTrigger Binding="{Binding CurrentView}" Value="{x:Static vm:AppView.Calibration}">
                                 <Setter Property="ContentTemplate" Value="{StaticResource CalibrationTemplate}"/>
                             </DataTrigger>
+                            <DataTrigger Binding="{Binding CurrentView}" Value="{x:Static vm:AppView.Tutorial}">
+                                <Setter Property="ContentTemplate" Value="{StaticResource TutorialTemplate}"/>
+                            </DataTrigger>
                             <DataTrigger Binding="{Binding CurrentView}" Value="{x:Static vm:AppView.Settings}">
                                 <Setter Property="ContentTemplate" Value="{StaticResource SettingsTemplate}"/>
                             </DataTrigger>
@@ -108,5 +290,58 @@
                 </ContentControl.Style>
             </ContentControl>
         </Border>
+
+        <!-- Floating In-App Toast Notification -->
+        <Border Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,80,0,0"
+                Background="#161824" BorderBrush="#00C3FF" BorderThickness="1"
+                CornerRadius="8" Padding="22,12"
+                Visibility="{Binding IsNotificationVisible, Converter={StaticResource BoolToVis}}"
+                Panel.ZIndex="998">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="24" ShadowDepth="4" Opacity="0.6" Color="#000000"/>
+            </Border.Effect>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="✔" Foreground="#00C3FF" FontWeight="Bold" FontSize="15" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding NotificationMessage}" Foreground="#FFFFFF" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <!-- ============================================================ -->
+        <!-- ANIMATED SPLASH SCREEN INTRO (Auto-fades after 1.6 seconds)    -->
+        <!-- ============================================================ -->
+        <Grid Grid.RowSpan="2" 
+              Visibility="{Binding IsSplashScreenVisible, Converter={StaticResource BoolToVis}}"
+              Panel.ZIndex="1000">
+            <Grid.Background>
+                <RadialGradientBrush Center="0.5,0.4" GradientOrigin="0.5,0.4" RadiusX="0.6" RadiusY="0.6">
+                    <GradientStop Color="#161928" Offset="0.0"/>
+                    <GradientStop Color="#06070A" Offset="1.0"/>
+                </RadialGradientBrush>
+            </Grid.Background>
+
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <!-- Large, Crisp, Official AntarTech Cyber Logo (210px) -->
+                <Border Width="210" Height="210" CornerRadius="105" HorizontalAlignment="Center" Margin="0,0,0,26">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="50" Color="#00C3FF" Opacity="0.7" ShadowDepth="0"/>
+                    </Border.Effect>
+                    <Image Source="pack://application:,,,/logo.png" Stretch="Uniform"/>
+                </Border>
+
+                <!-- Brand Name -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,8">
+                    <TextBlock Text="ANTARTECH" FontSize="28" FontWeight="Black" Foreground="White" Margin="0,0,8,0"/>
+                    <TextBlock Text="CONTROL" FontSize="28" FontWeight="Normal" Foreground="#00C3FF"/>
+                </StackPanel>
+
+                <!-- Subtitle -->
+                <TextBlock Text="HARDWARE CONFIGURATION SUITE" 
+                           FontSize="11" FontWeight="Bold" Foreground="#6E7282" HorizontalAlignment="Center" Margin="0,0,0,28"/>
+
+                <!-- Sleek Animated Cyber Loading Bar -->
+                <ProgressBar Width="240" Height="3" IsIndeterminate="True" 
+                             Background="#141622" Foreground="#00C3FF" BorderThickness="0" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>

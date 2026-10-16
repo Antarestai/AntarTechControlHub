@@ -4,52 +4,196 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="800">
-    <StackPanel>
-        <TextBlock Text="HARDWARE MANAGEMENT SUITE" FontSize="14" FontWeight="Bold" Foreground="#00E5FF" Margin="0,0,0,5"/>
-        <TextBlock Text="MY DEVICES" FontSize="36" FontWeight="Black" Margin="0,0,0,30" Foreground="#FFFFFF"/>
-        
-        <ScrollViewer VerticalScrollBarVisibility="Auto" Height="500">
-            <ItemsControl ItemsSource="{Binding GroupedDevices}">
+             d:DesignHeight="700" d:DesignWidth="1100">
+
+    <UserControl.Triggers>
+        <EventTrigger RoutedEvent="Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" Duration="0:0:0.22">
+                        <DoubleAnimation.EasingFunction>
+                            <CubicEase EasingMode="EaseOut"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)" From="16.0" To="0.0" Duration="0:0:0.22">
+                        <DoubleAnimation.EasingFunction>
+                            <CubicEase EasingMode="EaseOut"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </UserControl.Triggers>
+    <UserControl.RenderTransform>
+        <TranslateTransform Y="0"/>
+    </UserControl.RenderTransform>
+
+    <Grid Margin="20,10,20,20">
+        <!-- Centered Container with comfortable glass spacing -->
+        <StackPanel MaxWidth="820" HorizontalAlignment="Center" Margin="0,15,0,0">
+            
+            <!-- Clean Header: Mis Dispositivos + Refresh Button -->
+            <Grid Margin="0,4,0,30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="{Binding L.DashTitle}" FontSize="26" FontWeight="Bold" Foreground="#FFFFFF" VerticalAlignment="Center"/>
+
+                <Button Grid.Column="1" Command="{Binding RefreshDevicesCommand}"
+                        Cursor="Hand" VerticalAlignment="Center" Margin="16,0,0,0">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="BtnBorder" Background="#141724" BorderBrush="#252A3E" BorderThickness="1" 
+                                    CornerRadius="9" Padding="16,9">
+                                <Border.Effect>
+                                    <DropShadowEffect x:Name="BtnShadow" BlurRadius="12" Color="#000000" Opacity="0.3" ShadowDepth="2"/>
+                                </Border.Effect>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Path x:Name="BtnIcon" 
+                                          Data="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" 
+                                          Fill="#00C3FF" Width="13" Height="13" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="BtnText" Text="{Binding DataContext.L.DashScan, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                               FontSize="12" FontWeight="SemiBold" Foreground="#D5D9E6" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="BtnBorder" Property="Background" Value="#1C2134"/>
+                                    <Setter TargetName="BtnBorder" Property="BorderBrush" Value="#00C3FF"/>
+                                    <Setter TargetName="BtnText" Property="Foreground" Value="#FFFFFF"/>
+                                    <Setter TargetName="BtnBorder" Property="Effect">
+                                        <Setter.Value>
+                                            <DropShadowEffect BlurRadius="14" Color="#00C3FF" Opacity="0.3" ShadowDepth="1"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="BtnBorder" Property="Background" Value="#0F111B"/>
+                                    <Setter TargetName="BtnBorder" Property="BorderBrush" Value="#0090C0"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+
+            <!-- Empty State (No devices detected) -->
+            <Border CornerRadius="16" Padding="45" Margin="0,10,0,0" BorderBrush="#262A3E" BorderThickness="1"
+                    Visibility="{Binding HasDevices, Converter={StaticResource InverseBoolToVis}}">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#E6121422" Offset="0"/>
+                        <GradientStop Color="#E6171A2C" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="30" Color="#000000" Opacity="0.5" ShadowDepth="6"/>
+                </Border.Effect>
+                <StackPanel HorizontalAlignment="Center">
+                    <Border Background="#1A1E2E" CornerRadius="32" Width="64" Height="64" HorizontalAlignment="Center" Margin="0,0,0,16">
+                        <TextBlock Text="🔌" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="{Binding L.DashEmptyTitle}" FontSize="19" FontWeight="Bold" Foreground="#FFFFFF" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                    <TextBlock Text="{Binding L.DashEmptyDesc}" 
+                               FontSize="13" Foreground="#8E93A3" HorizontalAlignment="Center" Margin="0,0,0,22" TextAlignment="Center"/>
+                    <Button Content="{Binding L.DashScanNow}" Command="{Binding RefreshDevicesCommand}"
+                            Background="#00C3FF" Foreground="#08090C" FontWeight="Bold" FontSize="12" Padding="22,10" Cursor="Hand" HorizontalAlignment="Center">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="8"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </StackPanel>
+            </Border>
+
+            <!-- Devices List (Glassmorphism Cards) -->
+            <ItemsControl ItemsSource="{Binding Devices}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Margin="0,0,0,30">
-                            <!-- Category Header -->
-                            <TextBlock Text="{Binding Key}" FontSize="18" FontWeight="Bold" Foreground="#FF33CC" Margin="0,0,0,10" />
-                            
-                            <!-- Devices in this category -->
-                            <ItemsControl ItemsSource="{Binding}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel Orientation="Horizontal" />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <!-- Note: Normally this would be a button, but since we have the sidebar for selection, 
-                                             we can just show them as nice cards. If they want it clickable, we can bind it. -->
-                                        <Button Margin="0,0,15,15" Padding="0" BorderThickness="0" Background="Transparent" 
-                                                Command="{Binding DataContext.NavigateToDashboardCommand, RelativeSource={RelativeSource AncestorType=Window}}" >
-                                            <Border Width="250" Height="120" Background="#130C20" CornerRadius="12" Padding="20" BorderBrush="#1F1433" BorderThickness="1">
-                                                <StackPanel>
-                                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" Foreground="#FFFFFF" TextWrapping="Wrap" MaxHeight="45"/>
-                                                    <TextBlock Text="{Binding Type}" FontSize="12" Foreground="#8888AA" Margin="0,5,0,0"/>
-                                                    <TextBlock FontSize="10" Foreground="#666688" Margin="0,15,0,0">
-                                                        <Run Text="VID: "/>
-                                                        <Run Text="{Binding Vid}" Foreground="#00E5FF"/>
-                                                        <Run Text=" PID: "/>
-                                                        <Run Text="{Binding Pid}" Foreground="#00E5FF"/>
-                                                    </TextBlock>
+                        <Button Margin="0,0,0,14" Padding="0" BorderThickness="0" Background="Transparent" Cursor="Hand"
+                                Command="{Binding DataContext.SelectDeviceCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="CardBorder" CornerRadius="14" Padding="22,18" BorderBrush="#25293E" BorderThickness="1">
+                                        <!-- Glass Background with subtle gradient & top specular highlight -->
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#D9141624" Offset="0"/>
+                                                <GradientStop Color="#D9181B2C" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Border.Effect>
+                                            <DropShadowEffect x:Name="CardShadow" BlurRadius="24" Color="#000000" Opacity="0.45" ShadowDepth="4"/>
+                                        </Border.Effect>
+
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="74"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- 1. Left: Product Logo (Same as Splash Screen, clean without glow) -->
+                                            <Border Grid.Column="0" Width="64" Height="64" CornerRadius="32" Background="#0C0E18" BorderBrush="#202436" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Center" ClipToBounds="True">
+                                                <Image Source="pack://application:,,,/logo_crisp.png" Stretch="Uniform" Margin="2" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                            </Border>
+
+                                            <!-- 2. Center: Product Subtitle Badge, Name, Description, Status -->
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="14,0,14,0">
+                                                <!-- Subtitle Badge (Category / Hardware Function) -->
+                                                <Border Background="#101D2C" CornerRadius="4" Padding="7,2" HorizontalAlignment="Left" Margin="0,0,0,5" BorderBrush="#1C3852" BorderThickness="1">
+                                                    <TextBlock Text="{Binding Subtitle}" FontSize="10" FontWeight="Bold" Foreground="#00C3FF"/>
+                                                </Border>
+
+                                                <!-- Exact Windows Name -->
+                                                <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="19" Foreground="#FFFFFF" Margin="0,0,0,3"/>
+
+                                                <!-- Product Description -->
+                                                <TextBlock Text="{Binding Description}" FontSize="12" Foreground="#8E93A3" Margin="0,0,0,6" TextWrapping="Wrap"/>
+                                                
+                                                <!-- Status: Connected -->
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <Ellipse Width="6" Height="6" Fill="#10B981" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="{Binding DataContext.L.ConnectedDirectInput, RelativeSource={RelativeSource AncestorType=UserControl}}" FontSize="11" Foreground="#10B981" FontWeight="SemiBold"/>
+                                                </StackPanel>
+                                            </StackPanel>
+
+                                            <!-- 3. Right: Glass Pill Button "CALIBRAR" -->
+                                            <Border Grid.Column="2" x:Name="ConfigBtn" CornerRadius="8" Background="#1B1E2E" BorderBrush="#2C3148" BorderThickness="1" Padding="14,9" VerticalAlignment="Center">
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding DataContext.L.CalibrateBtn, RelativeSource={RelativeSource AncestorType=UserControl}}" FontSize="11" FontWeight="Bold" Foreground="#00C3FF" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="⚙" FontSize="13" Foreground="#00C3FF" VerticalAlignment="Center"/>
                                                 </StackPanel>
                                             </Border>
-                                        </Button>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
+                                        </Grid>
+                                    </Border>
+
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="CardBorder" Property="BorderBrush" Value="#00C3FF"/>
+                                            <Setter TargetName="CardBorder" Property="Background">
+                                                <Setter.Value>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                        <GradientStop Color="#F0181C2E" Offset="0"/>
+                                                        <GradientStop Color="#F01E2238" Offset="1"/>
+                                                    </LinearGradientBrush>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter TargetName="ConfigBtn" Property="BorderBrush" Value="#00C3FF"/>
+                                            <Setter TargetName="ConfigBtn" Property="Background" Value="#00C3FF"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-        </ScrollViewer>
-    </StackPanel>
+
+        </StackPanel>
+    </Grid>
 </UserControl>

@@ -34,5 +34,4 @@ AntarTech Control es una aplicación de calibración y configuración para hardw
 
 ## Próximos Pasos (Pendientes)
 *   **Fase 4 (Dispositivos no-eje):** Implementar la comunicación Serie (COM) para configurar/diagnosticar dispositivos como iFlag o Rumble motors de AntarTech.
-*   **Fase 5 (Firmware):** Portar el protocolo de configuración por puerto Serie para que las placas RP2040 reciban la estructura de ejes, curvas y suavizados, y sean procesados por el hardware (Opción 2 definitiva).
-*   **Mejoras Menores:** Minimizar la app al System Tray (bandeja del sistema) de Windows.
+*   **Mejoras Menores:** Integración de instalador estándar Inno Setup para Windows y distribución Open Source.

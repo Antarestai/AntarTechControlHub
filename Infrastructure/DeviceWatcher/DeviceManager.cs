@@ -14,7 +14,6 @@ namespace AntarTechControl.Infrastructure.DeviceWatcher
             _scanners = new List<IDeviceScanner>
             {
                 new DirectInputScanner()
-                // new SerialScanner() in the future
             };
         }
 

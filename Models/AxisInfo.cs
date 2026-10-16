@@ -10,9 +10,85 @@ namespace AntarTechControl.Models
     {
         public string Name { get; set; } = string.Empty;
 
+        public int AxisIndex { get; set; } = 0;
+
+        [ObservableProperty]
+        private string hardwareName = string.Empty;
+
+        public static readonly string[] AvailableRoles = new[] { "Acelerador", "Freno", "Embrague", "Freno de Mano", "Volante", "Generico" };
+        public string[] Roles => AvailableRoles;
+
+        [ObservableProperty]
+        private string role = "Generico";
+
+        public string DisplayTitle
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(Role) && 
+                    !Role.Equals("Generico", StringComparison.OrdinalIgnoreCase) && 
+                    !Role.Equals("Genérico", StringComparison.OrdinalIgnoreCase))
+                {
+                    return Role;
+                }
+                string cleanName = Name switch
+                {
+                    "RotationX" => "Rx",
+                    "RotationY" => "Ry",
+                    "RotationZ" => "Rz",
+                    "Slider 0" => "Slider 0",
+                    "Slider 1" => "Slider 1",
+                    _ => Name
+                };
+                return $"Eje {cleanName}";
+            }
+        }
+
+        public bool IsCentered => Role switch
+        {
+            "Volante" => true,
+            "Acelerador" or "Freno" or "Embrague" or "Freno de Mano" => false,
+            _ => Name == "X"
+        };
+
+        partial void OnRoleChanged(string value)
+        {
+            OnPropertyChanged(nameof(DisplayTitle));
+            OnPropertyChanged(nameof(RoleColor));
+            OnPropertyChanged(nameof(IsCentered));
+            UpdateCurvePoints();
+        }
+
+        public string RoleColor => Role switch
+        {
+            "Acelerador" => "#10B981",
+            "Freno" => "#F43F5E",
+            "Embrague" => "#06B6D4",
+            "Freno de Mano" => "#F59E0B",
+            "Volante" => "#8B5CF6",
+            _ => "#64748B"
+        };
+
+        [ObservableProperty]
+        [property: JsonIgnore]
+        private double rawPercent = 0;
+
         [ObservableProperty]
         [property: JsonIgnore]
         private int rawValue;
+
+        [ObservableProperty]
+        private int logicalMin = 0;
+
+        [ObservableProperty]
+        private int logicalMax = 65535;
+
+        [ObservableProperty]
+        [property: JsonIgnore]
+        private bool isCalibratedInWindows = false;
+
+        [JsonIgnore]
+        public Action<AxisInfo>? OnCalibrationChanged { get; set; }
 
         [ObservableProperty]
         private int min = 0;
@@ -24,21 +100,16 @@ namespace AntarTechControl.Models
         private int center = 32768;
 
         [ObservableProperty]
-        private double innerDeadzone = 0; // 0 to 100%
+        private double innerDeadzone = 0;
 
         [ObservableProperty]
-        private double outerDeadzone = 0; // 0 to 100%
+        private double outerDeadzone = 0;
 
         [ObservableProperty]
-        private double response = 1.0; // 1.0 is linear
-
-        partial void OnResponseChanged(double value)
-        {
-            UpdateCurvePoints();
-        }
+        private double response = 1.0;
 
         [ObservableProperty]
-        private double smoothing = 0; // -99 to 99%
+        private double smoothing = 0;
         
         [property: JsonIgnore]
         public double LastRawProcessedValue { get; set; } = -1;
@@ -52,6 +123,29 @@ namespace AntarTechControl.Models
 
         [ObservableProperty]
         [property: JsonIgnore]
+        private double windowsCalibratedPercent = 0;
+
+        [ObservableProperty]
+        [property: JsonIgnore]
+        private int windowsCalibratedValue = 0;
+
+        [ObservableProperty]
+        [property: JsonIgnore]
+        private double currentDotX = 0;
+
+        [ObservableProperty]
+        [property: JsonIgnore]
+        private double currentDotY = 100;
+
+        [ObservableProperty]
+        private int deadzone = 0;
+
+        [ObservableProperty]
+        [property: JsonIgnore]
+        private bool isSelected = false;
+
+        [ObservableProperty]
+        [property: JsonIgnore]
         private double processedValue;
 
         [ObservableProperty]
@@ -62,6 +156,29 @@ namespace AntarTechControl.Models
         [property: JsonIgnore]
         private bool showAdvanced = false;
 
+        partial void OnMinChanged(int value)
+        {
+            UpdateCurvePoints();
+            OnCalibrationChanged?.Invoke(this);
+        }
+
+        partial void OnCenterChanged(int value)
+        {
+            UpdateCurvePoints();
+            OnCalibrationChanged?.Invoke(this);
+        }
+
+        partial void OnMaxChanged(int value)
+        {
+            UpdateCurvePoints();
+            OnCalibrationChanged?.Invoke(this);
+        }
+
+        partial void OnInnerDeadzoneChanged(double value)
+        {
+            OnCalibrationChanged?.Invoke(this);
+        }
+
         public AxisInfo()
         {
             UpdateCurvePoints();
@@ -70,14 +187,32 @@ namespace AntarTechControl.Models
         public void UpdateCurvePoints()
         {
             var points = new PointCollection();
-            // Create a 100x40 grid for the curve preview (width 100, height 40)
-            for (int x = 0; x <= 100; x += 5)
+            double lMin = LogicalMin;
+            double lMax = LogicalMax > LogicalMin ? LogicalMax : 65535;
+            double range = lMax - lMin;
+            if (range <= 0) range = 1;
+
+            double minP = Math.Clamp((Min - lMin) / range * 100.0, 0, 100);
+            double cenP = Math.Clamp((Center - lMin) / range * 100.0, 0, 100);
+            double maxP = Math.Clamp((Max - lMin) / range * 100.0, 0, 100);
+
+            if (minP <= maxP)
             {
-                double normalizedX = x / 100.0;
-                double normalizedY = Math.Pow(normalizedX, Response);
-                // In WPF, Y goes down, so we subtract from 40
-                points.Add(new System.Windows.Point(x, 40 - (normalizedY * 40)));
+                points.Add(new System.Windows.Point(0, 100));
+                points.Add(new System.Windows.Point(minP, 100));
+                points.Add(new System.Windows.Point(cenP, 50));
+                points.Add(new System.Windows.Point(maxP, 0));
+                points.Add(new System.Windows.Point(100, 0));
             }
+            else
+            {
+                points.Add(new System.Windows.Point(0, 0));
+                points.Add(new System.Windows.Point(maxP, 0));
+                points.Add(new System.Windows.Point(cenP, 50));
+                points.Add(new System.Windows.Point(minP, 100));
+                points.Add(new System.Windows.Point(100, 100));
+            }
+            
             CurvePoints = points;
         }
 
@@ -85,6 +220,10 @@ namespace AntarTechControl.Models
         private void SetMin()
         {
             Min = RawValue;
+            if (!IsCentered)
+            {
+                Center = Min + (Max - Min) / 2;
+            }
         }
 
         [RelayCommand]
@@ -97,19 +236,69 @@ namespace AntarTechControl.Models
         private void SetMax()
         {
             Max = RawValue;
+            if (!IsCentered)
+            {
+                Center = Min + (Max - Min) / 2;
+            }
+        }
+
+        [RelayCommand]
+        private void InvertAxis()
+        {
+            int temp = Min;
+            Min = Max;
+            Max = temp;
+            Inverted = Min > Max;
+            if (!IsCentered)
+            {
+                Center = Min + (Max - Min) / 2;
+            }
+            UpdateCurvePoints();
+            OnCalibrationChanged?.Invoke(this);
         }
 
         [RelayCommand]
         private void Reset()
         {
-            Min = 0;
-            Max = 65535; // Default genérico, idealmente se ajusta dinámicamente
-            Center = 32767;
+            Min = LogicalMin;
+            Max = LogicalMax > LogicalMin ? LogicalMax : 65535;
+            Center = (Min + Max) / 2;
             InnerDeadzone = 0;
             OuterDeadzone = 0;
             Response = 1.0;
             Inverted = false;
             Smoothing = 0;
+            Deadzone = 0;
+        }
+
+        [RelayCommand]
+        private void DecMin() => Min = Math.Max(0, Min - 20);
+
+        [RelayCommand]
+        private void IncMin() => Min = Math.Min(LogicalMax, Min + 20);
+
+        [RelayCommand]
+        private void DecCenter() => Center = Math.Max(0, Center - 20);
+
+        [RelayCommand]
+        private void IncCenter() => Center = Math.Min(LogicalMax, Center + 20);
+
+        [RelayCommand]
+        private void DecMax() => Max = Math.Max(0, Max - 20);
+
+        [RelayCommand]
+        private void IncMax() => Max = Math.Min(LogicalMax, Max + 20);
+
+        [RelayCommand]
+        private void DecDeadzone() => Deadzone = Math.Max(0, Deadzone - 1);
+
+        [RelayCommand]
+        private void IncDeadzone() => Deadzone = Math.Min(50, Deadzone + 1);
+
+        [RelayCommand]
+        private void SetRole(string newRole)
+        {
+            Role = newRole;
         }
 
         [RelayCommand]

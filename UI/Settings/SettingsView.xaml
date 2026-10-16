@@ -4,26 +4,79 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="800">
-    <StackPanel>
-        <TextBlock Text="SYSTEM CONFIGURATION" FontSize="14" FontWeight="Bold" Foreground="#00E5FF" Margin="0,0,0,5"/>
-        <TextBlock Text="SETTINGS" FontSize="36" FontWeight="Black" Margin="0,0,0,30" Foreground="#FFFFFF"/>
-        
-        <Border Background="#130C20" CornerRadius="12" Padding="25" Margin="0,0,15,20" BorderBrush="#1F1433" BorderThickness="1">
-            <StackPanel>
-                <TextBlock Text="GENERAL" FontSize="18" FontWeight="Bold" Foreground="#FF33CC" Margin="0,0,0,15" />
-                
-                <TextBlock Text="Tema" FontSize="12" Foreground="#8888AA" Margin="0,0,0,5"/>
-                <ComboBox SelectedIndex="0" Width="200" HorizontalAlignment="Left" Background="#0A0512" Foreground="White" BorderBrush="#2A1B44" Margin="0,0,0,15">
-                    <ComboBoxItem Content="Dark Neon (Default)"/>
-                </ComboBox>
+             d:DesignHeight="780" d:DesignWidth="920">
 
-                <TextBlock Text="Iniciar con Windows" FontSize="12" Foreground="#8888AA" Margin="0,0,0,5"/>
-                <CheckBox Content="Arrancar minimizado en la bandeja del sistema" Foreground="#AAAAAA" FontSize="12" Margin="0,0,0,15"/>
+    <UserControl.Triggers>
+        <EventTrigger RoutedEvent="Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" Duration="0:0:0.20">
+                        <DoubleAnimation.EasingFunction>
+                            <CubicEase EasingMode="EaseOut"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)" From="12.0" To="0.0" Duration="0:0:0.20">
+                        <DoubleAnimation.EasingFunction>
+                            <CubicEase EasingMode="EaseOut"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </UserControl.Triggers>
+    <UserControl.RenderTransform>
+        <TranslateTransform Y="0"/>
+    </UserControl.RenderTransform>
 
-                <TextBlock Text="Buscar Actualizaciones" FontSize="12" Foreground="#8888AA" Margin="0,0,0,5"/>
-                <Button Content="BUSCAR AHORA" Width="150" HorizontalAlignment="Left" Background="#1A112C" Foreground="#00E5FF" BorderBrush="#2A1B44" Padding="10,5"/>
+    <!-- Logitech G HUB Style Minimalist Settings Container -->
+    <Grid Margin="20,10,20,20">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel MaxWidth="760" HorizontalAlignment="Left" Margin="40,10,0,40">
+
+                <!-- Header: Configuración general -->
+                <TextBlock Text="{Binding L.SettingsTitle}" FontSize="24" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,24"/>
+
+                <!-- Item 4: Idioma (Simple, conciso y con ComboBox dropdown) -->
+                <StackPanel Margin="0,6,0,10">
+                    <TextBlock Text="{Binding L.LangSection}" FontSize="13" FontWeight="SemiBold" Foreground="#FFFFFF" Margin="0,0,0,8"/>
+                    <ComboBox ItemsSource="{Binding AvailableLanguages}" 
+                              SelectedItem="{Binding SelectedLanguage}"
+                              Style="{StaticResource GHubComboBox}"
+                              Width="250" Height="34" HorizontalAlignment="Left"/>
+                </StackPanel>
+
+                <Border Height="1" Background="#161826" Margin="0,14"/>
+
+                <!-- Item 5: Soporte técnico y reporte de errores -->
+                <StackPanel Margin="0,6,0,10">
+                    <TextBlock Text="{Binding L.SupportSection}" FontSize="13" FontWeight="SemiBold" Foreground="#FFFFFF" Margin="0,0,0,4"/>
+                    <TextBlock Text="{Binding L.SupportSub}" FontSize="11" Foreground="#6E7385" Margin="0,0,0,12"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="{Binding L.ReportErrorBtn}" Command="{Binding ReportErrorCommand}"
+                                Style="{StaticResource ApplyBtn}" Padding="16,7" FontSize="12" Margin="0,0,10,0"/>
+                        <Button Content="{Binding L.CopyDiagBtn}" Command="{Binding CopyDiagnosticsCommand}"
+                                Style="{StaticResource SubtleActionBtn}" Padding="14,7" FontSize="12"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <Border Height="1" Background="#161826" Margin="0,14"/>
+
+                <!-- Item 6: Acerca de -->
+                <Grid Margin="0,6,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding L.AboutSection}" FontSize="13" FontWeight="SemiBold" Foreground="#FFFFFF"/>
+                        <TextBlock Text="{Binding L.AppVersionInfo}" FontSize="11" Foreground="#00C3FF" FontWeight="SemiBold" Margin="0,2,0,2"/>
+                        <TextBlock Text="{Binding L.DevelopedBy}" FontSize="11" Foreground="#6E7385"/>
+                    </StackPanel>
+                    <Button Grid.Column="1" Content="{Binding L.CheckUpdatesBtn}" Command="{Binding CheckUpdatesCommand}"
+                            Style="{StaticResource SubtleActionBtn}" Padding="14,7" FontSize="12" VerticalAlignment="Center"/>
+                </Grid>
+
             </StackPanel>
-        </Border>
-    </StackPanel>
+        </ScrollViewer>
+    </Grid>
 </UserControl>

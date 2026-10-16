@@ -1,26 +1,51 @@
-# Visual Studio
-.vs/
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
-
-# Build results
+# Build & Publish outputs
+[Bb]in/
+[Oo]bj/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
+publish_output/
+Setup_Output/
+Output/
+bld/
 x64/
 x86/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
-bld/
-[Bb]in/
-[Oo]bj/
-[Ll]og/
-[Ll]ogs/
 
-# Project files
+# IDE & Editor files
+.vs/
 .idea/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
 *.csproj.user
 *.userprefs
+
+# Logs and Crash Dumps
+[Ll]og/
+[Ll]ogs/
+*.log
+*.dmp
+*.crash
+
+# Secrets, Keys & Certificates (Security)
+*.env
+*.env.*
+*.pfx
+*.p12
+*.snk
+*.key
+*.pem
+secrets.json
+appsettings.Production.json
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store

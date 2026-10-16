@@ -37,6 +37,7 @@
     <Resource Include="logo_clean_neon.png" />
     <Resource Include="pedals_render.jpg" />
     <Resource Include="pedals_box.png" />
+    <Resource Include="logo_badge.png" />
   </ItemGroup>
 
 </Project>

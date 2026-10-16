@@ -67,10 +67,15 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                        <TextBlock Text="{Binding L.AboutSection}" FontSize="13" FontWeight="SemiBold" Foreground="#FFFFFF"/>
-                        <TextBlock Text="{Binding L.AppVersionInfo}" FontSize="11" Foreground="#00C3FF" FontWeight="SemiBold" Margin="0,2,0,2"/>
-                        <TextBlock Text="{Binding L.DevelopedBy}" FontSize="11" Foreground="#6E7385"/>
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="50" Height="50" Margin="0,0,16,0" VerticalAlignment="Center" CornerRadius="25" Background="#10121A" BorderBrush="#1C2030" BorderThickness="1">
+                            <Image Source="pack://application:,,,/logo_badge.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" Margin="2"/>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="{Binding L.AboutSection}" FontSize="13" FontWeight="SemiBold" Foreground="#FFFFFF"/>
+                            <TextBlock Text="{Binding L.AppVersionInfo}" FontSize="11" Foreground="#00C3FF" FontWeight="SemiBold" Margin="0,2,0,2"/>
+                            <TextBlock Text="{Binding L.DevelopedBy}" FontSize="11" Foreground="#6E7385"/>
+                        </StackPanel>
                     </StackPanel>
                     <Button Grid.Column="1" Content="{Binding L.CheckUpdatesBtn}" Command="{Binding CheckUpdatesCommand}"
                             Style="{StaticResource SubtleActionBtn}" Padding="14,7" FontSize="12" VerticalAlignment="Center"/>

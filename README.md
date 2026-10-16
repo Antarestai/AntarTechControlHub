@@ -77,7 +77,7 @@ iscc "AntarTechControl_Installer.iss"
 
 | Archivo | Hash SHA-256 |
 |---|---|
-| `AntarTechControl_Setup_v1.0.0.exe` | `8C80D1630C5A463432BC55BA8B7A8C02D5B41D15C3C475113A6F6545EA89121D` |
+| `AntarTechControl_Setup_v1.0.0.exe` | `01F135889329FDE21B8B89323E58C288E25165704CC0B09FEF014AC280AC3A47` |
 
 ---
 

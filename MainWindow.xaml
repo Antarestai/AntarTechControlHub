@@ -16,7 +16,7 @@
         Background="#08090C" Foreground="White"
         FontFamily="{StaticResource AntarFontFamily}" WindowStartupLocation="CenterScreen"
         WindowStyle="None" ResizeMode="CanResize"
-        Icon="pack://application:,,,/logo_clean_cyan.png">
+        Icon="pack://application:,,,/logo.ico">
 
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="66"

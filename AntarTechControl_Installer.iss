@@ -2,7 +2,7 @@
 ; Genera el instalador oficial para Windows (x64)
 
 #define MyAppName "AntarTech Control"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.0.1"
 #define MyAppPublisher "Antartech Simracing"
 #define MyAppURL "https://antartech.com.ar"
 #define MyAppExeName "AntarTechControl.exe"

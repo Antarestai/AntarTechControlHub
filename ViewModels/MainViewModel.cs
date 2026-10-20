@@ -375,7 +375,8 @@ namespace AntarTechControl.ViewModels
                             Center = axis.Center,
                             Max = axis.Max,
                             Deadzone = axis.Deadzone,
-                            IsConfigured = true
+                            IsConfigured = true,
+                            IsCentered = axis.IsCentered
                         });
                     }
                 }
@@ -704,7 +705,8 @@ namespace AntarTechControl.ViewModels
                 var sb = new System.Text.StringBuilder();
                 sb.AppendLine("=== REPORTE DE DIAGNÓSTICO ANTARTECH CONTROL ===");
                 sb.AppendLine($"Fecha: {DateTime.Now}");
-                sb.AppendLine($"Versión Suite: v1.0.0 (x64)");
+                string appVer = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.0.1";
+                sb.AppendLine($"Versión Suite: v{appVer} (x64)");
                 sb.AppendLine($"Dispositivos Detectados: {Devices.Count}");
                 foreach (var dev in Devices)
                 {
@@ -765,8 +767,8 @@ namespace AntarTechControl.ViewModels
                     using var doc = System.Text.Json.JsonDocument.Parse(json);
                     if (doc.RootElement.TryGetProperty("version", out var verProp))
                     {
-                        string latestVersionStr = verProp.GetString() ?? "1.0.0";
-                        string currentVersionStr = "1.0.0";
+                        string latestVersionStr = verProp.GetString() ?? "1.0.1";
+                        string currentVersionStr = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.0.1";
 
                         if (Version.TryParse(latestVersionStr, out var latestVer) &&
                             Version.TryParse(currentVersionStr, out var currentVer))

@@ -56,6 +56,11 @@ namespace AntarTechControl.Models
             OnPropertyChanged(nameof(DisplayTitle));
             OnPropertyChanged(nameof(RoleColor));
             OnPropertyChanged(nameof(IsCentered));
+            if (!IsCentered && Max > Min)
+            {
+                Center = Min + (Max - Min) / 2;
+                OnPropertyChanged(nameof(Center));
+            }
             UpdateCurvePoints();
         }
 
@@ -158,6 +163,11 @@ namespace AntarTechControl.Models
 
         partial void OnMinChanged(int value)
         {
+            if (!IsCentered && Max > Min)
+            {
+                Center = Min + (Max - Min) / 2;
+                OnPropertyChanged(nameof(Center));
+            }
             UpdateCurvePoints();
             OnCalibrationChanged?.Invoke(this);
         }
@@ -170,6 +180,11 @@ namespace AntarTechControl.Models
 
         partial void OnMaxChanged(int value)
         {
+            if (!IsCentered && Max > Min)
+            {
+                Center = Min + (Max - Min) / 2;
+                OnPropertyChanged(nameof(Center));
+            }
             UpdateCurvePoints();
             OnCalibrationChanged?.Invoke(this);
         }

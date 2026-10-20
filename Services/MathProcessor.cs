@@ -47,8 +47,8 @@ namespace AntarTechControl.Services
             else
             {
                 double range = max - min;
-                if (range == 0) range = 1;
-                winPercent = (raw - min) / range * 100.0;
+                if (range <= 0) range = 1;
+                winPercent = Math.Clamp((raw - min) / range * 100.0, 0.0, 100.0);
             }
 
             axis.WindowsCalibratedPercent = Math.Clamp(winPercent, 0.0, 100.0);

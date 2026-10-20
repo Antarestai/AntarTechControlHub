@@ -95,11 +95,12 @@ namespace AntarTechControl.Services
         public string ReportErrorBtn => IsEn ? "Report Bug" : IsPt ? "Reportar Erro" : "Reportar error";
         public string CopyDiagBtn => IsEn ? "Copy Diagnostics" : IsPt ? "Copiar Diagnóstico" : "Copiar diagnóstico";
         public string AboutSection => IsEn ? "About" : IsPt ? "Sobre" : "Acerca de";
-        public string AppVersionInfo => IsEn ? "AntarTech Control Suite v1.0.0 (x64) • Official Release" : IsPt ? "AntarTech Control Suite v1.0.0 (x64) • Oficial" : "AntarTech Control Suite v1.0.0 (x64) • Oficial";
+        public static string VersionStr => System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.0.1";
+        public string AppVersionInfo => IsEn ? $"AntarTech Control Suite v{VersionStr} (x64) • Official Release" : IsPt ? $"AntarTech Control Suite v{VersionStr} (x64) • Oficial" : $"AntarTech Control Suite v{VersionStr} (x64) • Oficial";
         public string DevelopedBy => IsEn ? "Developed by Antares" : IsPt ? "Desenvolvido por Antares" : "Desarrollado por Antares";
         public string CheckUpdatesBtn => IsEn ? "Check for updates" : IsPt ? "Verificar atualizações" : "Buscar actualizaciones";
         public string CheckingUpdates => IsEn ? "Checking for updates..." : IsPt ? "Verificando atualizações..." : "Comprobando actualizaciones...";
-        public string AppUpToDate => IsEn ? "✔ AntarTech Control is up to date (v1.0.0)" : IsPt ? "✔ AntarTech Control está atualizado (v1.0.0)" : "✔ AntarTech Control está en su versión más reciente (v1.0.0)";
+        public string AppUpToDate => IsEn ? $"✔ AntarTech Control is up to date (v{VersionStr})" : IsPt ? $"✔ AntarTech Control está atualizado (v{VersionStr})" : $"✔ AntarTech Control está en su versión más reciente (v{VersionStr})";
         public string UpdateFoundTitle => IsEn ? "Update Available" : IsPt ? "Atualização Disponível" : "Actualización Disponible";
         public string UpdateFoundMsg => IsEn ? "A new version ({0}) is available!\n\nDo you want to visit the AntarTech website to download it?" : IsPt ? "Uma nova versão ({0}) está disponível!\n\nDeseja acessar o site da AntarTech para baixá-la?" : "¡Una nueva versión ({0}) está disponible!\n\n¿Deseas visitar el sitio web de AntarTech para descargarla?";
 

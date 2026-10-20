@@ -13,6 +13,7 @@ namespace AntarTechControl.Services
         public int Max { get; set; }
         public int Deadzone { get; set; }
         public bool IsConfigured { get; set; }
+        public bool IsCentered { get; set; } = true;
     }
 
     public static class DirectInputCalibrator
@@ -196,9 +197,15 @@ namespace AntarTechControl.Services
                     using var axisKey = axesKey.CreateSubKey(axis.AxisIndex.ToString(), writable: true);
                     if (axisKey == null) continue;
 
+                    int center = axis.Center;
+                    if (!axis.IsCentered)
+                    {
+                        center = axis.Min + (axis.Max - axis.Min) / 2;
+                    }
+
                     byte[] calBytes = new byte[12];
                     BitConverter.GetBytes(axis.Min).CopyTo(calBytes, 0);
-                    BitConverter.GetBytes(axis.Center).CopyTo(calBytes, 4);
+                    BitConverter.GetBytes(center).CopyTo(calBytes, 4);
                     BitConverter.GetBytes(axis.Max).CopyTo(calBytes, 8);
 
                     axisKey.SetValue("Calibration", calBytes, RegistryValueKind.Binary);

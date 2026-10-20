@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Versi%C3%B3n-1.0.0-00c3ff.svg" alt="Versión 1.0.0" />
+  <img src="https://img.shields.io/badge/Versi%C3%B3n-1.0.1-00c3ff.svg" alt="Versión 1.0.1" />
   <img src="https://img.shields.io/badge/.NET-8.0--windows-512BD4.svg" alt=".NET 8" />
   <img src="https://img.shields.io/badge/Plataforma-Windows%20x64-0078D6.svg" alt="Windows x64" />
   <img src="https://img.shields.io/badge/DirectInput-120Hz-22c55e.svg" alt="DirectInput 120Hz" />
@@ -40,7 +40,7 @@ Construida con una arquitectura de código abierto, transparente y liviana, ofre
 Puedes descargar el instalador oficial desde nuestro sitio web o desde la sección de Releases:
 
 * **Sitio Web Oficial**: [antartech.com.ar](https://antartech.com.ar)
-* **Descarga Directa**: [AntarTechControl_Setup_v1.0.0.exe](https://antartech.com.ar/descargas/AntarTechControl_Setup_v1.0.0.exe)
+* **Descarga Directa**: [AntarTechControl_Setup_v1.0.1.exe](https://antartech.com.ar/descargas/AntarTechControl_Setup_v1.0.1.exe)
 
 El instalador es completamente **autocontenido**: no requiere instalar previamente .NET Runtime ni dependencias adicionales.
 
@@ -77,7 +77,7 @@ iscc "AntarTechControl_Installer.iss"
 
 | Archivo | Hash SHA-256 |
 |---|---|
-| `AntarTechControl_Setup_v1.0.0.exe` | `745F5A844F6625F82B370927F116112F3AE61D33C83936F93A02B40F27E5CCCC` |
+| `AntarTechControl_Setup_v1.0.1.exe` | `DE3F7A37FBB8DF42D29100BC75EB9AFC3C55F7E5F831EF65694624BA13822E8E` |
 
 ---
 
